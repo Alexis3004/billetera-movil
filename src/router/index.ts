@@ -11,7 +11,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import { characterRoute } from '../characters/router/index';
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
+    // history: createWebHistory(import.meta.env.BASE_URL),
+    history: createWebHistory('https://billetera-movil.netlify.app'),
     routes: [
         // Public
         { path: "/", name: "home", component: HomePage },
