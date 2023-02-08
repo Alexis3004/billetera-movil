@@ -1,5 +1,3 @@
-const AboutPage = () => import("@/shared/pages/AboutPage.vue");
-// import AboutPage from "@/shared/pages/AboutPage.vue";
 import SignIn from "@/shared/pages/SignIn.vue";
 import SignUp from "@/shared/pages/SignUp.vue";
 import Movimientos from "@/shared/pages/MovimientosUser.vue";
@@ -16,7 +14,6 @@ const router = createRouter({
     routes: [
         // Public
         { path: "/", name: "home", component: HomePage },
-        { path: "/about", name: "about", component: AboutPage },
         { path: "/signin", name: "signin", component: SignIn },
         { path: "/signup", name: "signup", component: SignUp },
         { path: "/movimientos", name: "movimientos", component: Movimientos },

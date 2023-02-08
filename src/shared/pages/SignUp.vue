@@ -2,17 +2,17 @@
 
 <template>
     <div class="h-full flex justify-center items-center w-full ">
-        <div class="bg-white w-1/3 p-7 rounded-xl">
-            <h1 class="text-blue-900 text-center text-3xl font-bold mb-10">
+        <div class="bg-white w-2/3 lg:w-1/2 p-12 rounded-xl">
+            <h1 class="text-black text-center text-3xl font-bold my-10">
                 Registrarse
             </h1>
-            <form class="w-full lg:grid lg:grid-cols-2 lg:gap-x-10">
+            <form class="w-full mt-16 lg:grid lg:grid-cols-2 lg:gap-x-10">
                 <div class="flex flex-col mb-8">
                     <label class="text-black font-semibold mb-2"
                         >Número de identificación*</label
                     >
                     <input
-                        class="border p-2 rounded-lg"
+                        class="border border-gray-400 p-2 rounded-lg"
                         placeholder="Ingrese su número de identificación"
                         type="number"
                     />
@@ -20,7 +20,7 @@
                 <div class="flex flex-col mb-8">
                     <label class="text-black font-semibold mb-2">Nombre*</label>
                     <input
-                        class="border p-2 rounded-lg"
+                        class="border border-gray-400 p-2 rounded-lg"
                         placeholder="Ingrese su nombre"
                     />
                 </div>
@@ -29,7 +29,7 @@
                         >Apellido*</label
                     >
                     <input
-                        class="border p-2 rounded-lg"
+                        class="border border-gray-400 p-2 rounded-lg"
                         placeholder="Ingrese su apellido"
                     />
                 </div>
@@ -38,7 +38,7 @@
                         >Correo electrónico*</label
                     >
                     <input
-                        class="border p-2 rounded-lg"
+                        class="border border-gray-400 p-2 rounded-lg"
                         placeholder="Ingrese su correo electrónico"
                         type="email"
                     />
@@ -48,7 +48,7 @@
                         >Número de celular*</label
                     >
                     <input
-                        class="border p-2 rounded-lg"
+                        class="border border-gray-400 p-2 rounded-lg"
                         placeholder="Ingrese su número de celular"
                         type="number"
                     />
@@ -58,8 +58,8 @@
                         >Contraseña*</label
                     >
                     <input
-                        class="border p-2 rounded-lg"
-                        placeholder="Ingrese una contraseña para administrar el perfil"
+                        class="border border-gray-400 p-2 rounded-lg"
+                        placeholder="Ingrese una contraseña"
                         type="password"
                     />
                 </div>
@@ -68,7 +68,7 @@
                         >Confirmar contraseña*</label
                     >
                     <input
-                        class="border p-2 rounded-lg"
+                        class="border border-gray-400 p-2 rounded-lg"
                         placeholder="Ingrese nuevamente la contraseña"
                         type="password"
                     />
@@ -76,16 +76,16 @@
                 <div class="flex flex-col mb-8">
                     <label class="text-black font-semibold mb-2">PIN*</label>
                     <input
-                        class="border p-2 rounded-lg"
-                        placeholder="Ingrese su PIN de seis dígitos para transacciones"
+                        class="border border-gray-400 p-2 rounded-lg"
+                        placeholder="Ingrese su PIN de seis dígitos"
                         type="number"
                     />
                 </div>
                 <div class="flex justify-center col-span-2">
                     <button
-                        class="mt-8 p-3 font-bold text-white bg-blue-800 rounded-lg hover:bg-blue-700 cursor-pointer"
+                        class="mt-8 p-3 font-bold text-black bg-yellow-400 rounded-lg hover:bg-yellow-300 cursor-pointer"
                     >
-                        Iniciar sesión
+                        Registrarse
                     </button>
                 </div>
             </form>

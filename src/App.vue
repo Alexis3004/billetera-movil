@@ -20,6 +20,6 @@ import NavBar from './shared/components/NavBar.vue';
 
 <style scoped>
 .wrapper {
-    @apply w-full grid grid-cols-1 grid-rows-layout-2;
+    @apply w-full bg-[#181818] grid grid-cols-1 grid-rows-layout-2;
 }
 </style>
