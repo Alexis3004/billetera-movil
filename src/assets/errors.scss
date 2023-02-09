@@ -1,0 +1,43 @@
+.error-message {
+    width: 100%;
+    font-size: 13px;
+    color: #FF5E34;
+    font-weight: 500;
+}
+
+[error=true] {
+    label,
+    span {
+        color: #FF5E34 !important;
+    }
+
+    input,
+    select,
+    textarea {
+        border-color: #FF5E34 !important;
+        caret-color: #FF5E34 !important;
+
+        &:focus {
+            border-color: #FF5E34 !important;
+            box-shadow: 0 0 0 0.25rem rgb(255 94 52 / 25%) !important;
+        }
+    }
+}
+
+[errorpicker=true] {
+
+    label {
+        color: #FF5E34 !important;
+    }
+
+    .error {
+        border-color: #FF5E34 !important;
+        caret-color: #FF5E34 !important;
+
+        &:focus {
+            border-color: #FF5E34 !important;
+            box-shadow: 0 0 0 0.25rem rgb(255 94 52 / 25%) !important;
+        }
+    }
+
+}

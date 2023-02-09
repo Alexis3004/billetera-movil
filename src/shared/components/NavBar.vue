@@ -1,13 +1,30 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { useUserStore } from '@/stores/user'
 import MoneyTransfer from "@/shared/components/icons/MoneyTransfer.vue";
-// import type { RouterLink as routes } from "@/router/link-routes";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRoute, useRouter } from "vue-router";
 import HouseIcon from "./icons/HouseIcon.vue";
-
+import paymentsApi from '@/api/paymentsApi';
 import { ref } from "vue";
+
+const route = useRoute()
+const router = useRouter()
+
+const store = useUserStore()
+const { user } = storeToRefs(store)
+
 const info = ref(false)
 
 const dropInfo = () => info.value = !info.value
+
+const cerrarSesion = async () => {
+    info.value = !info.value
+    await paymentsApi.post('/logout')
+    user.value = null
+    localStorage.clear()
+    router.push({ name: 'signin' })
+}
+
 </script>
 
 <template>
@@ -24,12 +41,26 @@ const dropInfo = () => info.value = !info.value
         </div>
     </nav>
     <transition>
-    <div v-show="info" class="z-50 flex flex-col justify-center items-center absolute right-14 top-14 bg-gray-700 w-32 h-24 text-white p-4">
-        <RouterLink to="/editarPerfil" class="my-2 font-semibold hover:opacity-50 cursor-pointer">Editar cuenta</RouterLink>
-        <hr class=" border border-white w-full"/>
-        <RouterLink to="/" class="my-2 font-semibold hover:opacity-50 cursor-pointer text-sm text-gray-300">Cerrar sesión</RouterLink>
-    </div>
-  </transition>
+        <div v-show="info"
+            class="z-50 flex flex-col justify-center items-center absolute right-14 top-14 bg-gray-700 w-32 h-auto text-white p-4 rounded-md">
+            <template v-if="user !== null">
+                <RouterLink @click="dropInfo" to="/editarPerfil"
+                    class="my-2 font-semibold hover:opacity-50 cursor-pointer">Editar cuenta
+                </RouterLink>
+                <hr class=" border border-white w-full" />
+                <RouterLink @click="cerrarSesion" to="/"
+                    class="my-2 font-semibold hover:opacity-50 cursor-pointer">
+                    Cerrar
+                    sesión</RouterLink>
+            </template>
+            <template v-else>
+                <RouterLink @click="dropInfo" v-if="route.name != 'signin'" to="/signin"
+                    class="my-2 font-semibold hover:opacity-50 cursor-pointer">Loguearse</RouterLink>
+                <RouterLink @click="dropInfo" v-if="route.name != 'signup'" to="/signup"
+                    class="my-2 font-semibold hover:opacity-50 cursor-pointer">Registrarse</RouterLink>
+            </template>
+        </div>
+    </transition>
 </template>
 
 <style scoped>

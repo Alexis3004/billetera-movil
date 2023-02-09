@@ -1,13 +1,23 @@
-import { createApp } from 'vue';
-import App from './App.vue';
-import router from './router/index';
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+import App from './App.vue'
+import router from './router/index'
 
-import './assets/main.css';
+import './assets/main.css'
 import '@/assets/index.css'
+import '@/assets/errors.scss'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 
-const app = createApp(App);
+//directiva
+import ClickOutside from '@/directivas/clickOutside.js'
 
-app.use(router);
+const pinia = createPinia()
+const app = createApp(App)
 
-app.mount('#app');
+app.use(pinia)
+app.use(router)
+
+app.directive('click-outside',ClickOutside)
+
+app.mount('#app')
+

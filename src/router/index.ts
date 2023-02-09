@@ -4,9 +4,8 @@ import Movimientos from "@/shared/pages/MovimientosUser.vue";
 import EditarPerfil from "@/shared/pages/EditarPerfil.vue";
 import ModalTransferir from "@/shared/components/ModalTransferir.vue";
 import HomePage from "@/shared/pages/HomePage.vue";
-// const CharacterLayout = () => import("@/characters/layout/CharacterLayout.vue");
 import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
-import { characterRoute } from '../characters/router/index';
+import { validateUser } from "@/helpers";
 
 const router = createRouter({
     // history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,24 +16,27 @@ const router = createRouter({
         { path: "/signin", name: "signin", component: SignIn },
         { path: "/signup", name: "signup", component: SignUp },
         { path: "/movimientos", name: "movimientos", component: Movimientos },
-        { path: "/modalTransferir", name: "modalTransferir", component: ModalTransferir },
+        { path: "/modalTransferir", name: "modal-transferir", component: ModalTransferir },
         { path: "/editarPerfil", name: "editarPerfil", component: EditarPerfil },
 
-        // Characters
-        //path: '/characters',
-        characterRoute,
-        // {
-        //     ...characterRoute,
-        //     path: '/characters',
-        // },
-        // { path: "/characters", name: "characters", component: CharacterLayout },
-
         // Default
-        { path: "/:pathMatch(.*)*", redirect: () => ({ name: "home" }) },
+        { path: "/:pathMatch(.*)*", redirect: { name: "home" } },
     ],
 });
 
 //path: '/characters',
 // router.addRoute( characterRoute )
+
+router.beforeEach(async (to, from) => {
+    const isAuthenticated = validateUser()
+    if ( to.name !== 'signin' && to.name !== 'signup' &&  !isAuthenticated) {
+        // redirect the user to the login page
+        return { name: 'signin' }
+    }
+
+    if (isAuthenticated && (to.name == 'signin' || to.name == 'signup')) {
+        return { name: 'home' }
+    }
+})
 
 export default router;
