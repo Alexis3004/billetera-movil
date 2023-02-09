@@ -43,7 +43,8 @@ const validarCampos = () => {
     return v$.value.$invalid;
 }
 
-const handleRestablecer = async () => {
+const handleRestablecer = async (event: Event) => {
+    event.preventDefault()
     const formInvalido = [
         validarCampos()
     ];
@@ -83,7 +84,7 @@ const handleRestablecer = async () => {
             <ul v-if="errors.length > 0" class="error-message error font-bold">
                 <li v-for="(error, index) in errors" :key="index" class="font-semibold">{{ error.msg }}</li>
             </ul>
-            <form>
+            <form @submit="handleRestablecer($event)">
                 <div class="flex flex-col mb-8" v-bind="{ error: v$.pin.$error }">
                     <label class="font-semibold mb-2"
                         >Nuevo PIN*</label
@@ -99,7 +100,7 @@ const handleRestablecer = async () => {
                     </span>
                 </div>
                 <div class="flex justify-center">
-                    <button class="mt-8 p-3 font-bold bg-yellow-400 hover:bg-yellow-300 rounded-lg" @click="handleRestablecer">Reestablecer</button>
+                    <button class="mt-8 p-3 font-bold bg-yellow-400 hover:bg-yellow-300 rounded-lg">Reestablecer</button>
                 </div>
             </form>
         </div>
