@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const paymentsApi = axios.create({
-    baseURL: "http://localhost:3000",
+    baseURL: "https://payments-gmba.onrender.com",
     // headers: {
     //     Authorization : `Bearer ${user ? user.api_token : ''}`
     // }
