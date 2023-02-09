@@ -20,7 +20,13 @@ const usuario = reactive({
     telefono: user.value?.telefono
 })
 
-const errors = ref([])
+interface Error {
+    msg: string;
+    param: string;
+    location: string;
+}
+
+const errors = ref<Error[]>([])
 
 const rules = computed(() => ({
     identificacion: {

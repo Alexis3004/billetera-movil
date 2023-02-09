@@ -15,7 +15,13 @@ const model = reactive({
     pin: ''
 })
 
-const errors = ref([])
+interface Error {
+    msg: string;
+    param: string;
+    location: string;
+}
+
+const errors = ref<Error[]>([])
 
 const close = () => {
     emit('close')

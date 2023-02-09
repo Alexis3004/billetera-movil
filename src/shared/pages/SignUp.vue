@@ -23,7 +23,13 @@ const usuario = reactive({
     confirmPassword: ''
 })
 
-const errors = ref([])
+interface Error {
+    msg: string;
+    param: string;
+    location: string;
+}
+
+const errors = ref<Error[]>([])
 
 const rules = computed(() => ({
     identificacion: {

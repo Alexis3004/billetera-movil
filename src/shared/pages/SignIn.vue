@@ -19,7 +19,13 @@ const login = reactive({
     password: ''
 })
 
-const errors = ref([])
+interface Error {
+    msg: string;
+    param: string;
+    location: string;
+}
+
+const errors = ref<Error[]>([])
 
 const rules = computed(() => ({
     telefono: {
