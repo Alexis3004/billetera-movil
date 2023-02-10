@@ -14,9 +14,12 @@
     "@fortawesome/fontawesome-free": "^6.3.0",
     "@vuelidate/core": "^2.0.0",
     "@vuelidate/validators": "^2.0.0",
+    "@vueuse/core": "^9.12.0",
     "axios": "^1.3.2",
+    "dayjs": "^1.11.7",
     "pinia": "^2.0.30",
     "sass": "^1.58.0",
+    "sweetalert2": "^11.7.1",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },

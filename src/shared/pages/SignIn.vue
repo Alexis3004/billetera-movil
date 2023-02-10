@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/user'
-import { reactive, computed, nextTick, ref } from 'vue'
+import { reactive, computed, nextTick, ref, watch } from 'vue';
 import { useVuelidate } from '@vuelidate/core'
 import { helpers, required, email, requiredIf } from '@vuelidate/validators'
 import paymentsApi from '@/api/paymentsApi';
 import { useRouter } from 'vue-router'
+import Swal from 'sweetalert2'
 
 const router = useRouter()
 
 const store = useUserStore()
-const { user } = storeToRefs(store)
+const { user, cargando } = storeToRefs(store)
 
 const login = reactive({
     tipo: 0,
@@ -18,14 +19,6 @@ const login = reactive({
     email: '',
     password: ''
 })
-
-interface Error {
-    msg: string;
-    param: string;
-    location: string;
-}
-
-const errors = ref<Error[]>([])
 
 const rules = computed(() => ({
     telefono: {
@@ -46,8 +39,8 @@ const validarCampos = () => {
     v$.value.$touch();
     return v$.value.$invalid;
 }
-// v$.value.$reset();
-const loguear =  async (event: Event) => {
+
+const loguear = async (event: Event) => {
     event.preventDefault();
     const formInvalido = [
         validarCampos()
@@ -64,23 +57,46 @@ const loguear =  async (event: Event) => {
         return;
     }
     try {
+        cargando.value = true
         const response = await paymentsApi.post('/login', {
             password: login.password,
             telefono: login.tipo == 0 ? login.telefono : '',
             email: login.tipo == 1 ? login.email : ''
         })
-        errors.value = []
-        localStorage.setItem('user',JSON.stringify(response.data.data.attributes))
+        cargando.value = false
         user.value = response.data.data.attributes
         router.push({ name: 'home' })
-    } catch(err: any) {
+    } catch (err: any) {
+        cargando.value = false
         if (Object.keys(err).includes('response')) {
             if (Object.keys(err.response).includes('data')) {
-                errors.value = err.response.data.errors
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: err.response.data.errors[0].msg,
+                    showConfirmButton: true,
+                    // timer: 1500
+                })
             }
+        } else {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Ha ocurrido un error al intentar autenticarse.',
+                showConfirmButton: true,
+                // timer: 1500
+            })
         }
     }
 }
+
+watch(login, () => {
+    if (login.tipo === 0 && login.email != '') {
+        login.email = ''
+    } else if (login.tipo === 1 && login.telefono != '') {
+        login.telefono = ''
+    }
+})
 </script>
 
 <template>
@@ -119,8 +135,8 @@ const loguear =  async (event: Event) => {
                 </div>
                 <div class="flex flex-col" v-bind="{ error: v$.password.$error }">
                     <label class="font-semibold mb-2">Contraseña<span class="ml-1 text-red-600">*</span></label>
-                    <input type="password" class="border border-gray-500 p-2 rounded-lg" placeholder="Ingrese su contraseña"
-                        v-model="login.password" />
+                    <input type="password" class="border border-gray-500 p-2 rounded-lg"
+                        placeholder="Ingrese su contraseña" v-model="login.password" />
                     <span class="error-message error" v-if="v$.password.$error">
                         {{ v$.password.$silentErrors[0].$message }}
                     </span>
@@ -132,9 +148,6 @@ const loguear =  async (event: Event) => {
                     </button>
                 </div>
             </form>
-            <ul v-if="errors.length > 0" class="error-message error font-bold">
-                <li v-for="(error, index) in errors" :key="index" class="font-semibold">{{ error.msg }}</li>
-            </ul>
         </div>
     </section>
 </template>

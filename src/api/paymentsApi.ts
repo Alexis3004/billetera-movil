@@ -1,10 +1,8 @@
 import axios from "axios";
+import router from '@/router'
 
 const paymentsApi = axios.create({
     baseURL: "https://payments-gmba.onrender.com",
-    // headers: {
-    //     Authorization : `Bearer ${user ? user.api_token : ''}`
-    // }
 });
 
 // Request interceptors for API calls
@@ -19,15 +17,18 @@ paymentsApi.interceptors.request.use(
     }
 );
 
-// paymentsApi.interceptors.response.use(
-//     response => {
-//         return response;
-//     },
-//     error => {
-//         if(error.response.status == 403){
-//             refreshToken()
-//         }
-//     }
-// );
+paymentsApi.interceptors.response.use(
+    response => {
+        return response;
+    },
+    error => {
+        if (error.response?.status == 401) {
+            localStorage.clear()
+            router.push({ name: 'signin' })
+            // window.history.go()
+        }
+        return Promise.reject(error);
+    }
+);
 
 export default paymentsApi;

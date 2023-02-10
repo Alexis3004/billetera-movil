@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/user'
-import { reactive, watch, computed, nextTick, ref } from 'vue';
+import { reactive, watch, computed, nextTick } from 'vue';
 import { useVuelidate } from '@vuelidate/core'
 import { helpers, required, email, numeric, minLength } from '@vuelidate/validators'
 import paymentsApi from '@/api/paymentsApi';
 import { useRouter } from 'vue-router'
+import Swal from 'sweetalert2';
 
 const router = useRouter()
 
 const store = useUserStore()
-const { user } = storeToRefs(store)
+const { user, cargando } = storeToRefs(store)
 
 const usuario = reactive({
     identificacion: user.value?.identificacion,
@@ -19,14 +20,6 @@ const usuario = reactive({
     email: user.value?.email,
     telefono: user.value?.telefono
 })
-
-interface Error {
-    msg: string;
-    param: string;
-    location: string;
-}
-
-const errors = ref<Error[]>([])
 
 const rules = computed(() => ({
     identificacion: {
@@ -76,16 +69,49 @@ const handleUpdate = async () => {
     }
 
     try {
-        const response = await paymentsApi.patch(`/user/update/${user.value?._id}`, usuario)
-        errors.value = []
-        localStorage.setItem('user', JSON.stringify(response.data.data.attributes))
-        user.value = response.data.data.attributes
-        router.push({ name: 'home' })
+        const result = await Swal.fire({
+            title: '¿Está seguro?',
+            text: "Los datos personales serán actualizados",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí'
+        })
+        if (result.isConfirmed) {
+            cargando.value = true
+            const response = await paymentsApi.patch(`/user/update/${user.value?._id}`, usuario)
+            cargando.value = false
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Datos actualizados con éxito',
+                showConfirmButton: false,
+                timer: 1500
+            })
+            user.value = response.data.data.attributes
+            router.push({ name: 'home' })
+        }
     } catch (err: any) {
+        cargando.value = false
         if (Object.keys(err).includes('response')) {
             if (Object.keys(err.response).includes('data')) {
-                errors.value = err.response.data.errors
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: `${err.response.data.errors[0].msg} ${err.response.data.errors[0].param ? `(${err.response.data.errors[0].param})` : ''}`,
+                    showConfirmButton: true,
+                    // timer: 1500
+                })
             }
+        } else {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Ha ocurrido un error al intentar modificar los datos personales.',
+                showConfirmButton: true,
+                // timer: 1500
+            })
         }
     }
 }
@@ -101,10 +127,6 @@ watch(user, () => {
 
 <template>
     <section className="py-14 text-white px-8 md:px-20">
-        <ul v-if="errors.length > 0" class="error-message error font-bold">
-            <li v-for="(error, index) in errors" :key="index" class="font-semibold">{{ error.msg }} {{ `${error.param ?
-            `(${error.param})` : ''}` }}</li>
-        </ul>
         <span class="text-3xl">Hola, {{ `${user?.nombre} ${user?.apellido}` }}</span>
         <div class="flex flex-wrap justify-center md:gap-10">
             <div class="flex flex-col my-5 lg:my-8" v-bind="{ error: v$.nombre.$error }">

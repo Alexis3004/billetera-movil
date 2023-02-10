@@ -1,26 +1,24 @@
-import SignIn from "@/shared/pages/SignIn.vue";
-import SignUp from "@/shared/pages/SignUp.vue";
-import Movimientos from "@/shared/pages/MovimientosUser.vue";
-import EditarPerfil from "@/shared/pages/EditarPerfil.vue";
-import ModalTransferir from "@/shared/components/ModalTransferir.vue";
-import HomePage from "@/shared/pages/HomePage.vue";
-import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
-import { validateUser } from "@/helpers";
+const SignIn = () => import('@/shared/pages/SignIn.vue');
+const SignUp = () => import('@/shared/pages/SignUp.vue');
+const Movimientos = () => import('@/shared/pages/MovimientosUser.vue');
+const EditarPerfil = () => import('@/shared/pages/EditarPerfil.vue');
+const HomePage = () => import('@/shared/pages/HomePage.vue');
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
+import { validateUser } from '@/helpers';
 
 const router = createRouter({
     // history: createWebHistory(import.meta.env.BASE_URL),
     history: createWebHashHistory(),
     routes: [
         // Public
-        { path: "/", name: "home", component: HomePage },
-        { path: "/signin", name: "signin", component: SignIn },
-        { path: "/signup", name: "signup", component: SignUp },
-        { path: "/movimientos", name: "movimientos", component: Movimientos },
-        { path: "/modalTransferir", name: "modal-transferir", component: ModalTransferir },
-        { path: "/editarPerfil", name: "editarPerfil", component: EditarPerfil },
+        { path: '/', name: 'home', component: HomePage },
+        { path: '/signin', name: 'signin', component: SignIn },
+        { path: '/signup', name: 'signup', component: SignUp },
+        { path: '/movimientos', name: 'movimientos', component: Movimientos },
+        { path: '/editarPerfil', name: 'editarPerfil', component: EditarPerfil },
 
         // Default
-        { path: "/:pathMatch(.*)*", redirect: { name: "home" } },
+        { path: '/:pathMatch(.*)*', redirect: { name: 'home' } },
     ],
 });
 

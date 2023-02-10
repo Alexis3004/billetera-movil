@@ -20,3 +20,11 @@ export const validateUser = () => {
     }
     return isAuthenticated
 }
+
+export const formatCoin = (cantidad: number) => {
+    return cantidad.toLocaleString("es-CO", {
+        style: "currency",
+        currency: "COP",
+        maximumSignificantDigits: 10,
+    });
+};

@@ -11,7 +11,7 @@ const route = useRoute()
 const router = useRouter()
 
 const store = useUserStore()
-const { user } = storeToRefs(store)
+const { user, cargando } = storeToRefs(store)
 
 const info = ref(false)
 
@@ -19,9 +19,10 @@ const dropInfo = () => info.value = !info.value
 
 const cerrarSesion = async () => {
     info.value = !info.value
+    cargando.value = true
     await paymentsApi.post('/logout')
+    cargando.value = false
     user.value = null
-    localStorage.clear()
     router.push({ name: 'signin' })
 }
 

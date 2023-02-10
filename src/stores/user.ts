@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { StorageSerializers, useStorage } from '@vueuse/core'
 
 interface User {
     _id: string,
@@ -14,12 +15,26 @@ interface User {
 }
 
 interface State {
-    user: User | null;
+    user: any;
+    bancos: any;
+    tiendas: any;
+    cargando: boolean;
+    saldo: number;
+}
+
+interface Entidad {
+    nombre: string;
+    email: string;
+    telefono: number;
 }
 
 export const useUserStore = defineStore("user", {
     state: (): State => ({
-        user: null,
+        user: useStorage('user', null, undefined, { serializer: StorageSerializers.object }),
+        bancos: useStorage('bancos', null, undefined, { serializer: StorageSerializers.object }),
+        tiendas: useStorage('tiendas', null, undefined, { serializer: StorageSerializers.object }),
+        cargando: false,
+        saldo: 0
     }),
     getters: {
         // doubleCount: (state) => state.count * 2,
@@ -27,6 +42,12 @@ export const useUserStore = defineStore("user", {
     actions: {
         setUser(usuario : User | null) {
             this.user = usuario;
+        },
+        setBancos(bancos : Entidad[]) {
+            this.bancos = bancos;
+        },
+        setTiendas(tiendas : Entidad[]) {
+            this.tiendas = tiendas;
         },
     },
 });

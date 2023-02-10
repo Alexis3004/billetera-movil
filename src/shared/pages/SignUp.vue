@@ -6,11 +6,12 @@ import { useVuelidate } from '@vuelidate/core'
 import { helpers, required, email, numeric, minLength, sameAs, maxLength } from '@vuelidate/validators'
 import paymentsApi from '@/api/paymentsApi';
 import { useRouter } from 'vue-router'
+import Swal from 'sweetalert2'
 
 const router = useRouter()
 
 const store = useUserStore()
-const { user } = storeToRefs(store)
+const { user, cargando } = storeToRefs(store)
 
 const usuario = reactive({
     identificacion: '',
@@ -22,14 +23,6 @@ const usuario = reactive({
     password: '',
     confirmPassword: ''
 })
-
-interface Error {
-    msg: string;
-    param: string;
-    location: string;
-}
-
-const errors = ref<Error[]>([])
 
 const rules = computed(() => ({
     identificacion: {
@@ -93,16 +86,38 @@ const registrarse = async (event: Event) => {
     }
 
     try {
+        cargando.value = true
         const response = await paymentsApi.post('/register', usuario)
-        errors.value = []
-        localStorage.setItem('user',JSON.stringify(response.data.data.attributes))
+        cargando.value = false
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Usuario creado exitosamente',
+            showConfirmButton: false,
+            timer: 1500
+        })
         user.value = response.data.data.attributes
         router.push({ name: 'home' })
-    } catch(err: any) {
+    } catch (err: any) {
+        cargando.value = false
         if (Object.keys(err).includes('response')) {
             if (Object.keys(err.response).includes('data')) {
-                errors.value = err.response.data.errors
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: `${err.response.data.errors[0].msg} ${err.response.data.errors[0].param ? `(${err.response.data.errors[0].param})` : ''}`,
+                    showConfirmButton: true,
+                    // timer: 1500
+                })
             }
+        } else {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Ha ocurrido un error al intentar registrarse.',
+                showConfirmButton: true,
+                // timer: 1500
+            })
         }
     }
 }
@@ -114,9 +129,6 @@ const registrarse = async (event: Event) => {
             <h1 class="text-center text-3xl font-bold my-10">
                 Registrarse
             </h1>
-            <ul v-if="errors.length > 0" class="error-message error font-bold">
-                <li v-for="(error, index) in errors" :key="index" class="font-semibold">{{ error.msg }} {{ `${error.param ? `(${ error.param })` : ''}` }}</li>
-            </ul>
             <form class="w-full mt-16 lg:grid lg:grid-cols-2 lg:gap-x-10" @submit="registrarse($event)">
                 <div class="flex flex-col mb-8" v-bind="{ error: v$.identificacion.$error }">
                     <label class="font-semibold mb-2">
@@ -131,8 +143,8 @@ const registrarse = async (event: Event) => {
                 </div>
                 <div class="flex flex-col mb-8" v-bind="{ error: v$.nombre.$error }">
                     <label class="font-semibold mb-2">Nombre<span class="ml-1 text-red-600">*</span></label>
-                    <input v-model="usuario.nombre" id="nombre" name="nombre" class="border border-gray-400 p-2 rounded-lg"
-                        placeholder="Ingrese su nombre" />
+                    <input v-model="usuario.nombre" id="nombre" name="nombre"
+                        class="border border-gray-400 p-2 rounded-lg" placeholder="Ingrese su nombre" />
                     <span class="error-message error" v-if="v$.nombre.$error">
                         {{ v$.nombre.$silentErrors[0].$message }}
                     </span>
