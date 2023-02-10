@@ -9,7 +9,7 @@ import { reactive, computed, nextTick, watch } from 'vue';
 const emit = defineEmits(['close'])
 
 const store = useUserStore()
-const { user, saldo, cargando, bancos } = storeToRefs(store)
+const { saldo, cargando, bancos } = storeToRefs(store)
 
 const recarga = reactive({
     tipo: 0,

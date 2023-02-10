@@ -25,7 +25,7 @@ paymentsApi.interceptors.response.use(
         if (error.response?.status == 401) {
             localStorage.clear()
             router.push({ name: 'signin' })
-            // window.history.go()
+            window.history.go()
         }
         return Promise.reject(error);
     }
